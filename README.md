@@ -1,4 +1,4 @@
-# Like A Rainbow
+# Like A Rainbow 🎨
 
 ## A simple app written in Go 💻
 
