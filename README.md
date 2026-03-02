@@ -11,7 +11,7 @@
 ## Templating: html/template
 
 ### Simulated Scenarios 📄
-#### <details><summary>/page/13</summary>Returns 503 Service Unaivalable.
+#### <details><summary>/page/13</summary>Returns 503 Service Unavailable.
 #### <details><summary>/page/99</summary> Triggers a runtime panic.
 
 ### Demo 🎥
