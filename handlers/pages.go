@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -36,9 +37,24 @@ func PageHandler(w http.ResponseWriter, r *http.Request) {
 	pageParam := chi.URLParam(r, "number")
 	if pageParam != "" {
 		p, err := strconv.Atoi(pageParam)
-		if err == nil && p >= 1 && p <= 4 {
+		if err == nil {
 			page = p
 		}
+	}
+
+	if page == 13 {
+		log.Println("Simulated 503 failure triggered")
+		http.Error(w, "Service temporarily unavailable", http.StatusServiceUnavailable)
+		return
+	}
+
+	if page == 99 {
+		panic("Simulated server crash")
+	}
+
+	if page < 1 || page > 4 {
+		http.NotFound(w, r)
+		return
 	}
 
 	data := PageData{
@@ -49,9 +65,11 @@ func PageHandler(w http.ResponseWriter, r *http.Request) {
 		NextPage:   page + 1,
 		PrevPage:   page - 1,
 	}
-
-	err := tmpl.Execute(w, data)
-	if err != nil {
-		http.Error(w, "Template error", http.StatusInternalServerError)
+	{
+		err := tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Template execution error: %v", err)
+			http.Error(w, "Template error", http.StatusInternalServerError)
+		}
 	}
 }
